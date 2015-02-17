@@ -3,15 +3,15 @@ require "./db/setup"
 require "./lib/all"
 require 'date'
 require 'colorize'
+require './cli'
 
-def add list_name, task
+def adder list_name, task
   puts "Adding #{task} to #{list_name}"
   List.where(name: list_name).first_or_create!
     .tasks.create(description: task)
 end
 
-def due n, due_date
-  date = DateTime.parse(due_date)
+def duer n, date
   puts "#{n} due date being set to: #{date}"
   Task.find(n).update(due_date: date)
 end
@@ -21,7 +21,7 @@ def mark_complete n
   Task.find(n).update(done: true)
 end
 
-def list all: false, name: nil
+def lister all: false, name: nil
   if !(all || name)
     tasks = Task.where(done: false)
   elsif all
@@ -63,7 +63,7 @@ def random
   display_item Task.find(id)
 end
 
-def search str
+def searcher str
   tasks = Task.where("description like '%#{str}%'")
   print "Id  ". ljust(25) + "Task  ".ljust(25) + "Due Date  ".ljust(25) + "Completed?".ljust(25)
   tasks.each do |task|
@@ -74,37 +74,35 @@ end
 ###############################
 
 puts "Running TaskMaster 2000"
-
 command = ARGV.shift
 case command
 when "add"
   task_list = ARGV.shift
   task = ARGV.shift
-  add task_list, task
+  load =["add","--list:", task_list,"--task", task]
 when "due"
   n = ARGV.shift
   due_date = ARGV.shift
-  due n, due_date
+  load =["due", "--id=#{n}", "--due_date=#{due_date}"]
 when "done"
   task = ARGV.shift
-  mark_complete task
+  load =["done", "--id=#{task}"]
 when "list"
   name = ARGV.shift
-  if name == "all"
-    list all: true
+  load = if name == "all"
+    ["list","--all=true"]
   elsif name
-    list name: name
+    ["list", "--name=Homework"]
   else
-    list
+    ["list"]
   end
 when "next"
-  random
+  load = ["next"]
 when "search"
   str = ARGV.shift
-  search str
-else
-  puts "Invalid Command"
+  load = ["search", "--str=#{str}"]
 end
+MyCLI.start(load)
 
 
 
