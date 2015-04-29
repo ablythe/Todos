@@ -1,29 +1,22 @@
-This folder structure should be suitable for starting a project that uses a database:
+TODO one of three.
 
-* Clone the repo
-* `rake generate:migration <Name>` to create a migration
-* `rake db:migrate` to run it
-* Create models
-* ... ?
-* Profit
+First version of a TODO list manager that is run only through a command line.
 
-You may need to fiddle around with remotes assuming that you don't want to push to this one (which you probably don't).
+Was written as practice with mySQL and sqlite3.
 
-## Rundown
+Allows a user to create a task list and then add taks to the list. Can mark tasks as done, can set due dates, and can view and sort tasks by due dates and completion.
 
-```
-.
-├── Gemfile             # Details which gems are required by the project
-├── README.md           # This file
-├── Rakefile            # Defines `rake generate:migration` and `db:migrate`
-├── config
-│   └── database.yml    # Defines the database config (e.g. name of file)
-├── console.rb          # `ruby console.rb` starts `pry` with models loaded
-├── db
-│   ├── dev.sqlite3     # Default location of the database file
-│   ├── migrate         # Folder containing generated migrations
-│   └── setup.rb        # `require`ing this file sets up the db connection
-└── lib                 # Your ruby code (models, etc.) should go here
-    └── all.rb          # Require this file to auto-require _all_ `.rb` files in `lib`
-```
-# Todos
+Accepts the following commands
+ruby todo add "LISTNAME" "TASK NAME"
+
+ruby todo due "TASK NAME" "DUE_DATE"
+
+ruby todo done "TASK NAME" 
+
+ruby todo list  all #lists all tasks
+
+ruby todo list "LIST NAME"  #lists all tasks in that list
+
+ruby todo next # shows a random incomplete task
+
+ruby search "SEARCH STRING" # searches for a task with that string.
